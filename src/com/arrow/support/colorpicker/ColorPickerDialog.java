@@ -22,13 +22,14 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
 
 import com.arrow.support.R;
 
@@ -38,9 +39,9 @@ public class ColorPickerDialog extends AlertDialog implements ColorPickerView.On
     private ColorPickerPanelView mOldColor;
     private ColorPickerPanelView mNewColor;
     private EditText mHex;
-
+    
     private boolean mShowLedPreview;
-
+ 
     private NotificationManager mNoMan;
     private Context mContext;
 
@@ -52,8 +53,10 @@ public class ColorPickerDialog extends AlertDialog implements ColorPickerView.On
 
     ColorPickerDialog(Context context, int initialColor, boolean showLedPreview) {
         super(context);
+        
         mContext = context;
         mShowLedPreview = showLedPreview;
+
         init(initialColor);
     }
 
@@ -70,10 +73,10 @@ public class ColorPickerDialog extends AlertDialog implements ColorPickerView.On
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         mNoMan = (NotificationManager)
-                mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                mContext.getSystemService(Context.NOTIFICATION_SERVICE);        
 
         assert inflater != null;
-        View layout = inflater.inflate(R.layout.preference_color_picker, null);
+        View layout = inflater.inflate(R.layout.dui_dialog_color_picker, null);
 
         mColorPicker = layout.findViewById(R.id.color_picker_view);
         mOldColor = layout.findViewById(R.id.old_color_panel);
@@ -124,17 +127,13 @@ public class ColorPickerDialog extends AlertDialog implements ColorPickerView.On
 
     private void showLed(int color) {
         if (mShowLedPreview) {
-            if (color == 0xFFFFFFFF) {
-                // argb white doesn't work
-                color = 0xffffff;
-            }
             mNoMan.forceShowLedLight(color);
         }
     }
 
     private void switchOffLed() {
         if (mShowLedPreview) {
-            mNoMan.forceShowLedLight(-1);
+            mNoMan.forceShowLedLight(0);
         }
     }
 
@@ -163,15 +162,13 @@ public class ColorPickerDialog extends AlertDialog implements ColorPickerView.On
             }
         }
         dismiss();
-        switchOffLed();
     }
-
+    
     @Override
     public void onStop() {
         super.onStop();
         switchOffLed();
     }
-
 
     @NonNull
     @Override
